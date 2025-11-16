@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Satisfaction Survey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            /* Make heading (h1 inside .header) sky blue */
+            .header h1 {
+                color: #38bdf8 !important; /* Tailwind's sky-400 */
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            font-weight: 600;
+        }
+
+        .question-group {
+            margin-bottom: 30px;
+        }
+
+        .question-label {
+            font-size: 1.1em;
+            color: #444;
+            margin-bottom: 15px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .required {
+            color: #e74c3c;
+            margin-left: 5px;
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .radio-option:hover, .checkbox-option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .radio-option input[type="radio"],
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .radio-option label,
+        .checkbox-option label {
+            cursor: pointer;
+            flex: 1;
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .rating-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .rating-option:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+        }
+
+        .rating-option input[type="radio"] {
+            display: none;
+        }
+
+        .rating-option input[type="radio"]:checked + label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .rating-option:has(input[type="radio"]:checked) {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .rating-option:has(input[type="radio"]:checked) label {
+            color: white;
+        }
+
+        .rating-option label {
+            display: block;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .rating-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 50px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .info-text {
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .section-title {
+                font-size: 1.3em;
+            }
+
+            .rating-scale {
+                flex-wrap: wrap;
+            }
+
+            .rating-option {
+                min-width: calc(50% - 5px);
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 15px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.7em;
+            }
+
+            .rating-option {
+                min-width: 100%;
+            }
+
+            .rating-number {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Employee Satisfaction Survey</h1>
+            <p>Your feedback helps us create a better workplace for everyone</p>
+        </div>
+
+        <form class="form-container" id="surveyForm" onsubmit="handleSubmit(event)">
+            <!-- Personal Information Section -->
+            <div class="section">
+                <h2 class="section-title">Personal Information</h2>
+                
+                <div class="question-group">
+                    <label class="question-label" for="department">Department <span class="required">*</span></label>
+                    <select id="department" name="department" required>
+                        <option value="">Select your department</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="it">Information Technology</option>
+                        <option value="finance">Finance</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="sales">Sales</option>
+                        <option value="operations">Operations</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label" for="tenure">How long have you been with the company? <span class="required">*</span></label>
+                    <select id="tenure" name="tenure" required>
+                        <option value="">Select tenure</option>
+                        <option value="less-than-1">Less than 1 year</option>
+                        <option value="1-3">1-3 years</option>
+                        <option value="3-5">3-5 years</option>
+                        <option value="5-10">5-10 years</option>
+                        <option value="more-than-10">More than 10 years</option>
+                    </select>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label" for="position">Your Position/Title</label>
+                    <input type="text" id="position" name="position" placeholder="e.g., Software Engineer, Manager, etc.">
+                </div>
+            </div>
+
+            <!-- Job Satisfaction Section -->
+            <div class="section">
+                <h2 class="section-title">Job Satisfaction</h2>
+                
+                <div class="question-group">
+                    <label class="question-label">Overall, how satisfied are you with your current job? <span class="required">*</span></label>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" id="satisfaction-1" name="job_satisfaction" value="1" required>
+                            <label for="satisfaction-1">
+                                <div class="rating-number">1</div>
+                                <div>Very Dissatisfied</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="satisfaction-2" name="job_satisfaction" value="2">
+                            <label for="satisfaction-2">
+                                <div class="rating-number">2</div>
+                                <div>Dissatisfied</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="satisfaction-3" name="job_satisfaction" value="3">
+                            <label for="satisfaction-3">
+                                <div class="rating-number">3</div>
+                                <div>Neutral</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="satisfaction-4" name="job_satisfaction" value="4">
+                            <label for="satisfaction-4">
+                                <div class="rating-number">4</div>
+                                <div>Satisfied</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="satisfaction-5" name="job_satisfaction" value="5">
+                            <label for="satisfaction-5">
+                                <div class="rating-number">5</div>
+                                <div>Very Satisfied</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">How would you rate your work-life balance? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="balance-excellent" name="work_life_balance" value="excellent" required>
+                            <label for="balance-excellent">Excellent</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="balance-good" name="work_life_balance" value="good">
+                            <label for="balance-good">Good</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="balance-fair" name="work_life_balance" value="fair">
+                            <label for="balance-fair">Fair</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="balance-poor" name="work_life_balance" value="poor">
+                            <label for="balance-poor">Poor</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">How challenging do you find your work? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="challenge-too-easy" name="work_challenge" value="too-easy" required>
+                            <label for="challenge-too-easy">Too Easy</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="challenge-just-right" name="work_challenge" value="just-right">
+                            <label for="challenge-just-right">Just Right</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="challenge-too-hard" name="work_challenge" value="too-hard">
+                            <label for="challenge-too-hard">Too Hard</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Management & Leadership Section -->
+            <div class="section">
+                <h2 class="section-title">Management & Leadership</h2>
+                
+                <div class="question-group">
+                    <label class="question-label">How would you rate your relationship with your immediate supervisor? <span class="required">*</span></label>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" id="supervisor-1" name="supervisor_rating" value="1" required>
+                            <label for="supervisor-1">
+                                <div class="rating-number">1</div>
+                                <div>Poor</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="supervisor-2" name="supervisor_rating" value="2">
+                            <label for="supervisor-2">
+                                <div class="rating-number">2</div>
+                                <div>Fair</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="supervisor-3" name="supervisor_rating" value="3">
+                            <label for="supervisor-3">
+                                <div class="rating-number">3</div>
+                                <div>Good</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="supervisor-4" name="supervisor_rating" value="4">
+                            <label for="supervisor-4">
+                                <div class="rating-number">4</div>
+                                <div>Very Good</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="supervisor-5" name="supervisor_rating" value="5">
+                            <label for="supervisor-5">
+                                <div class="rating-number">5</div>
+                                <div>Excellent</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">How well does management communicate company goals and vision? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="communication-excellent" name="management_communication" value="excellent" required>
+                            <label for="communication-excellent">Excellent</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="communication-good" name="management_communication" value="good">
+                            <label for="communication-good">Good</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="communication-fair" name="management_communication" value="fair">
+                            <label for="communication-fair">Fair</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="communication-poor" name="management_communication" value="poor">
+                            <label for="communication-poor">Poor</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">Do you receive regular feedback on your performance? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="feedback-yes" name="performance_feedback" value="yes" required>
+                            <label for="feedback-yes">Yes, regularly</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="feedback-sometimes" name="performance_feedback" value="sometimes">
+                            <label for="feedback-sometimes">Sometimes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="feedback-rarely" name="performance_feedback" value="rarely">
+                            <label for="feedback-rarely">Rarely</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="feedback-never" name="performance_feedback" value="never">
+                            <label for="feedback-never">Never</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compensation & Benefits Section -->
+            <div class="section">
+                <h2 class="section-title">Compensation & Benefits</h2>
+                
+                <div class="question-group">
+                    <label class="question-label">How satisfied are you with your current compensation? <span class="required">*</span></label>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" id="compensation-1" name="compensation_satisfaction" value="1" required>
+                            <label for="compensation-1">
+                                <div class="rating-number">1</div>
+                                <div>Very Dissatisfied</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="compensation-2" name="compensation_satisfaction" value="2">
+                            <label for="compensation-2">
+                                <div class="rating-number">2</div>
+                                <div>Dissatisfied</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="compensation-3" name="compensation_satisfaction" value="3">
+                            <label for="compensation-3">
+                                <div class="rating-number">3</div>
+                                <div>Neutral</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="compensation-4" name="compensation_satisfaction" value="4">
+                            <label for="compensation-4">
+                                <div class="rating-number">4</div>
+                                <div>Satisfied</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="compensation-5" name="compensation_satisfaction" value="5">
+                            <label for="compensation-5">
+                                <div class="rating-number">5</div>
+                                <div>Very Satisfied</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">How satisfied are you with the benefits package? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="benefits-very-satisfied" name="benefits_satisfaction" value="very-satisfied" required>
+                            <label for="benefits-very-satisfied">Very Satisfied</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="benefits-satisfied" name="benefits_satisfaction" value="satisfied">
+                            <label for="benefits-satisfied">Satisfied</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="benefits-neutral" name="benefits_satisfaction" value="neutral">
+                            <label for="benefits-neutral">Neutral</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="benefits-dissatisfied" name="benefits_satisfaction" value="dissatisfied">
+                            <label for="benefits-dissatisfied">Dissatisfied</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="benefits-very-dissatisfied" name="benefits_satisfaction" value="very-dissatisfied">
+                            <label for="benefits-very-dissatisfied">Very Dissatisfied</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workplace Environment Section -->
+            <div class="section">
+                <h2 class="section-title">Workplace Environment</h2>
+                
+                <div class="question-group">
+                    <label class="question-label">How would you rate the workplace culture? <span class="required">*</span></label>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" id="culture-1" name="workplace_culture" value="1" required>
+                            <label for="culture-1">
+                                <div class="rating-number">1</div>
+                                <div>Poor</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="culture-2" name="workplace_culture" value="2">
+                            <label for="culture-2">
+                                <div class="rating-number">2</div>
+                                <div>Fair</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="culture-3" name="workplace_culture" value="3">
+                            <label for="culture-3">
+                                <div class="rating-number">3</div>
+                                <div>Good</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="culture-4" name="workplace_culture" value="4">
+                            <label for="culture-4">
+                                <div class="rating-number">4</div>
+                                <div>Very Good</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="culture-5" name="workplace_culture" value="5">
+                            <label for="culture-5">
+                                <div class="rating-number">5</div>
+                                <div>Excellent</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">How would you rate your relationships with colleagues? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="colleagues-excellent" name="colleague_relationships" value="excellent" required>
+                            <label for="colleagues-excellent">Excellent</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="colleagues-good" name="colleague_relationships" value="good">
+                            <label for="colleagues-good">Good</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="colleagues-fair" name="colleague_relationships" value="fair">
+                            <label for="colleagues-fair">Fair</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="colleagues-poor" name="colleague_relationships" value="poor">
+                            <label for="colleagues-poor">Poor</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">What aspects of the workplace do you value most? (Select all that apply)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="value-teamwork" name="valued_aspects" value="teamwork">
+                            <label for="value-teamwork">Teamwork & Collaboration</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="value-diversity" name="valued_aspects" value="diversity">
+                            <label for="value-diversity">Diversity & Inclusion</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="value-innovation" name="valued_aspects" value="innovation">
+                            <label for="value-innovation">Innovation & Creativity</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="value-growth" name="valued_aspects" value="growth">
+                            <label for="value-growth">Professional Growth Opportunities</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="value-recognition" name="valued_aspects" value="recognition">
+                            <label for="value-recognition">Recognition & Appreciation</label>
+                        </div>
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="value-autonomy" name="valued_aspects" value="autonomy">
+                            <label for="value-autonomy">Autonomy & Independence</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career Development Section -->
+            <div class="section">
+                <h2 class="section-title">Career Development</h2>
+                
+                <div class="question-group">
+                    <label class="question-label">Are there adequate opportunities for professional growth and development? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="growth-yes" name="growth_opportunities" value="yes" required>
+                            <label for="growth-yes">Yes, plenty of opportunities</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="growth-some" name="growth_opportunities" value="some">
+                            <label for="growth-some">Some opportunities</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="growth-limited" name="growth_opportunities" value="limited">
+                            <label for="growth-limited">Limited opportunities</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="growth-none" name="growth_opportunities" value="none">
+                            <label for="growth-none">No opportunities</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">How likely are you to recommend this company as a great place to work? <span class="required">*</span></label>
+                    <div class="rating-scale">
+                        <div class="rating-option">
+                            <input type="radio" id="recommend-1" name="recommendation" value="1" required>
+                            <label for="recommend-1">
+                                <div class="rating-number">1</div>
+                                <div>Very Unlikely</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="recommend-2" name="recommendation" value="2">
+                            <label for="recommend-2">
+                                <div class="rating-number">2</div>
+                                <div>Unlikely</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="recommend-3" name="recommendation" value="3">
+                            <label for="recommend-3">
+                                <div class="rating-number">3</div>
+                                <div>Neutral</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="recommend-4" name="recommendation" value="4">
+                            <label for="recommend-4">
+                                <div class="rating-number">4</div>
+                                <div>Likely</div>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="recommend-5" name="recommendation" value="5">
+                            <label for="recommend-5">
+                                <div class="rating-number">5</div>
+                                <div>Very Likely</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Comments Section -->
+            <div class="section">
+                <h2 class="section-title">Additional Comments</h2>
+                
+                <div class="question-group">
+                    <label class="question-label" for="suggestions">What suggestions do you have to improve employee satisfaction?</label>
+                    <textarea id="suggestions" name="suggestions" placeholder="Please share your thoughts and suggestions..."></textarea>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label" for="additional-comments">Any additional comments or concerns?</label>
+                    <textarea id="additional-comments" name="additional_comments" placeholder="Feel free to share any other feedback..."></textarea>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="submit-container">
+                <button type="submit" class="submit-btn">Submit Survey</button>
+                <p class="info-text" style="margin-top: 15px;">Thank you for taking the time to complete this survey. Your feedback is valuable to us.</p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(event.target);
+            const data = {};
+            
+            // Collect all form data
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    // Handle multiple values (checkboxes)
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            // In a real application, you would send this data to a server
+            console.log('Survey Data:', data);
+            
+            // Show success message
+            alert('Thank you for completing the survey! Your responses have been recorded.');
+            
+            // Optionally reset the form
+            // event.target.reset();
+        }
+
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', function() {
+                // Optional: Add visual feedback
+                this.closest('.radio-option, .checkbox-option, .rating-option')?.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
