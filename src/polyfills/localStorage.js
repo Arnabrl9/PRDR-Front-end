@@ -27,3 +27,4 @@ if (typeof global !== 'undefined' && !global.localStorage) {
 
 module.exports = global.localStorage;
 
+

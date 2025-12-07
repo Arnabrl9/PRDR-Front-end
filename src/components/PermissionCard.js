@@ -62,3 +62,4 @@ const PermissionCard = ({ permission, onTogglePRDR }) => {
 export default PermissionCard;
 
 
+
